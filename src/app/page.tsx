@@ -1,33 +1,47 @@
 import { Hero } from "@/components/home/hero";
 import { CategoryTiles } from "@/components/home/category-tiles";
-import { ProductGrid } from "@/components/product/product-grid";
+import { ShopTheLook } from "@/components/home/shop-the-look";
+import { ProductCarousel } from "@/components/product/product-carousel";
 import { getProducts } from "@/lib/api/products";
 import type { Product } from "@/lib/api/types";
 
 export const revalidate = 60;
 
-async function getFeaturedProducts(): Promise<Product[]> {
+async function getHomepageProducts(): Promise<{ newArrivals: Product[]; accessories: Product[] }> {
   try {
-    const { results } = await getProducts({ ordering: "-created", in_stock: true });
-    return results.slice(0, 8);
+    const [newArrivals, accessories] = await Promise.all([
+      getProducts({ ordering: "-created", in_stock: true }),
+      getProducts({ category: "accessories" }),
+    ]);
+    return {
+      newArrivals: newArrivals.results.slice(0, 12),
+      accessories: accessories.results.slice(0, 12),
+    };
   } catch {
-    return [];
+    return { newArrivals: [], accessories: [] };
   }
 }
 
 export default async function Home() {
-  const featuredProducts = await getFeaturedProducts();
+  const { newArrivals, accessories } = await getHomepageProducts();
 
   return (
     <div className="flex flex-1 flex-col">
       <Hero />
       <CategoryTiles />
-      <section className="mx-auto w-full max-w-7xl px-6 pb-24">
-        <h2 className="font-display text-display-m text-ink">New arrivals</h2>
-        <div className="mt-8">
-          <ProductGrid products={featuredProducts} />
-        </div>
-      </section>
+      <ProductCarousel
+        overline="New season"
+        title="New arrivals"
+        viewAllHref="/products?ordering=-created"
+        products={newArrivals}
+      />
+      <ProductCarousel
+        overline="Curated"
+        title="Accessories"
+        viewAllHref="/products?category=accessories"
+        products={accessories}
+      />
+      <ShopTheLook products={newArrivals.slice(0, 3)} />
     </div>
   );
 }

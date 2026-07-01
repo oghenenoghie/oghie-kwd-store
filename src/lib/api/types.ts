@@ -11,6 +11,9 @@ export interface Product {
   name: string;
   description?: string;
   price: string | number;
+  /** Present when the product is on sale; unconfirmed field name. */
+  compare_at_price?: string | number;
+  is_new?: boolean;
   currency: string;
   category: string;
   in_stock: boolean;

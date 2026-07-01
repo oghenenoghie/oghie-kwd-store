@@ -51,6 +51,12 @@ export const NAV_SECTIONS: MegaMenuSection[] = [
   },
 ];
 
+export const SOCIAL_LINKS = [
+  { label: "Instagram", href: "https://instagram.com" },
+  { label: "Pinterest", href: "https://pinterest.com" },
+  { label: "TikTok", href: "https://tiktok.com" },
+];
+
 export const FOOTER_COLUMNS = [
   {
     heading: "Shop",

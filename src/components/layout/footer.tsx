@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { FOOTER_COLUMNS } from "@/lib/nav-data";
+import { FOOTER_COLUMNS, SOCIAL_LINKS } from "@/lib/nav-data";
 import { Button } from "@/components/ui/button";
 
 export function Footer() {
@@ -61,7 +61,21 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 border-t border-bone/10 px-6 py-6 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-7xl gap-5 border-t border-bone/10 px-6 pt-6">
+        {SOCIAL_LINKS.map((social) => (
+          <a
+            key={social.href}
+            href={social.href}
+            target="_blank"
+            rel="noreferrer"
+            className="font-body text-caption text-stone hover:text-bone"
+          >
+            {social.label}
+          </a>
+        ))}
+      </div>
+
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-6 pb-6 pt-4 sm:flex-row sm:justify-between">
         <p className="font-body text-caption text-stone">Visa · Mastercard · Amex · Apple Pay</p>
         <p className="font-body text-caption text-stone">© {new Date().getFullYear()} Oghie Store. All rights reserved.</p>
       </div>

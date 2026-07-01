@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { ShoppingBag, User } from "lucide-react";
+import { Heart, ShoppingBag, User } from "lucide-react";
 import { AnnouncementBar } from "./announcement-bar";
 import { MegaMenu } from "./mega-menu";
 import { MobileNav } from "./mobile-nav";
@@ -73,11 +73,11 @@ export function Header() {
             <SearchDialog />
           </span>
           <Link
-            href="/account"
-            aria-label="Account"
+            href="/wishlist"
+            aria-label="Wishlist"
             className={cn("transition-colors hover:text-brass", isTransparent ? "text-bone" : "text-ink")}
           >
-            <User size={20} />
+            <Heart size={20} />
           </Link>
           <button
             type="button"
@@ -95,6 +95,13 @@ export function Header() {
               </span>
             )}
           </button>
+          <Link
+            href="/account"
+            aria-label="Account"
+            className={cn("hidden transition-colors hover:text-brass sm:block", isTransparent ? "text-bone" : "text-ink")}
+          >
+            <User size={20} />
+          </Link>
         </div>
       </div>
     </header>
