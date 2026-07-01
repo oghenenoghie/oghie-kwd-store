@@ -1,5 +1,4 @@
 import { Hero } from "@/components/home/hero";
-import { CategoryTiles } from "@/components/home/category-tiles";
 import { ShopTheLook } from "@/components/home/shop-the-look";
 import { ProductCarousel } from "@/components/product/product-carousel";
 import { getProducts } from "@/lib/api/products";
@@ -28,7 +27,6 @@ export default async function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <Hero />
-      <CategoryTiles />
       <ProductCarousel
         overline="New season"
         title="New arrivals"
