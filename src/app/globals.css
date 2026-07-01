@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/*
+ * "Ink, Bone & Brass" design tokens — see
+ * .claude/skills/ecommerce-storefront-design/SKILL.md for the source spec.
+ */
+@theme {
+  --color-ink: #12110f;
+  --color-charcoal: #2b2a28;
+  --color-bone: #eae7df;
+  --color-stone: #8c8579;
+  --color-oxblood: #6b1e23;
+  --color-brass: #a8823d;
+
+  --font-display: var(--font-fraunces), serif;
+  --font-body: var(--font-work-sans), sans-serif;
+
+  --text-display-xl: clamp(2.2rem, 6vw, 4rem);
+  --text-display-l: clamp(2rem, 5.5vw, 3.6rem);
+  --text-display-m: clamp(1.5rem, 3vw, 2.2rem);
+  --text-body-l: 1.125rem;
+  --text-body-base: 1rem;
+  --text-caption: 0.8rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background: var(--color-bone);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
