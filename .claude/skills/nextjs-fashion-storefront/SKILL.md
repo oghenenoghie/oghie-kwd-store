@@ -88,13 +88,40 @@ fontFamily: {
 
 Don't ship the defaults above as final — ask the user for their actual brand palette/typeface before treating this as done. The point of these tokens is to avoid generic Inter/Tailwind-gray defaults, not to impersonate any specific brand.
 
+## API reference (live backend)
+
+Base URL: `https://oghie-store.vercel.app` — env var (`NEXT_PUBLIC_API_BASE_URL`), never hardcoded in components.
+
+| Purpose | Method | Path |
+|---|---|---|
+| Get JWT token | `POST` | `/api/auth/token/` |
+| Refresh JWT token | `POST` | `/api/auth/token/refresh/` |
+| Current user | `GET` | `/api/auth/me/` |
+| Product list | `GET` | `/api/products/` |
+| Product filters | `GET` | `/api/products/?search=&category=&currency=&min_price=&max_price=&in_stock=true&min_rating=&ordering=price` |
+| Currencies | `GET` | `/api/products/currencies/` |
+| Wishlist | `GET`/`POST` | `/api/products/wishlist/` |
+| Reviews | `GET`/`POST` | `/api/products/reviews/` |
+| Active cart | `GET` | `/api/orders/cart/active/` |
+| Checkout | `POST` | `/api/orders/cart/{cart_id}/checkout/` |
+| Orders | `GET` | `/api/orders/` |
+| My orders | `GET` | `/api/orders/mine/` |
+| Order tracking | `GET` | `/api/orders/tracking/` |
+| Payments | `GET`/`POST` | `/api/payments/` |
+| CMS sections | `GET` | `/api/cms/sections/` |
+| Analytics summary | `GET` | `/api/analytics/summary/` |
+
+This is the same custom Django REST backend used by `ecommerce-storefront-design` — the two skills share one API. Wire `ProductCard`/`ProductCarousel` data from `/api/products/` (use the filter querystring params above rather than string-concatenating a URL), the cart drawer from `/api/orders/cart/active/`, and checkout by POSTing to `/api/orders/cart/{cart_id}/checkout/` with the cached cart's `id`.
+
+Auth: JWT via `/api/auth/token/`, access token in memory, refresh via `/api/auth/token/refresh/` on a 401 before falling back to logout. Field-level response shapes aren't confirmed yet — check the DRF browsable API before locking in TypeScript types.
+
 ## Tech stack
 
 - **Next.js App Router + TypeScript + Tailwind CSS** (matches the user's usual stack)
 - **Radix UI primitives** for nav menu, dialogs (cart drawer, country selector), accessible by default
 - **Framer Motion** for the hover crossfade on product cards and drawer transitions — keep it to these two moments, not scattered everywhere
 - **next/image** for all product photography, with blur placeholders
-- Data layer: if backed by Shopify, use the **Storefront API** (GraphQL) via `@shopify/hydrogen-react` helpers or a thin custom client; if backed by a custom API (per the user's own `ecommerce-storefront-design` setup), reuse that project's existing route map instead of assuming Shopify
+- Data layer: backend is the custom Django REST API at `oghie-store.vercel.app` (see API reference above) — use TanStack Query on top of it for product lists, cart, and wishlist state; don't assume a Shopify Storefront/GraphQL layer for this project
 
 ## Do / don't
 
