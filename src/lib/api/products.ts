@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import type { Product, ProductFilters, ProductListResponse } from "./types";
+import type { Product, ProductFilters } from "./types";
 
 function serializeFilters(filters: ProductFilters = {}) {
   const params = new URLSearchParams();
@@ -11,8 +11,9 @@ function serializeFilters(filters: ProductFilters = {}) {
   return query ? `?${query}` : "";
 }
 
+/** GET /api/products/ returns a plain array, not a paginated {results} envelope. */
 export function getProducts(filters?: ProductFilters) {
-  return apiFetch<ProductListResponse>(`/api/products/${serializeFilters(filters)}`);
+  return apiFetch<Product[]>(`/api/products/${serializeFilters(filters)}`);
 }
 
 export function getCurrencies() {

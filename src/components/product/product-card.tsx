@@ -17,17 +17,19 @@ export function ProductCard({ product }: { product: Product }) {
   const addToCart = useAddToCart();
   const { open: openCartDrawer } = useCartDrawer();
 
-  const [flatImage, modelImage] = product.images ?? [];
+  const [flatImage, modelImage] = (product.images ?? []).map((image) => image.image_url);
+  const currencyCode = product.currency_detail.code;
+  const inStock = product.is_active && product.stock_quantity > 0;
   const price = Number(product.price);
   const comparePrice = product.compare_at_price !== undefined ? Number(product.compare_at_price) : undefined;
   const onSale = comparePrice !== undefined && comparePrice > price;
   const savings = onSale ? comparePrice! - price : 0;
 
   // One badge max: sold-out beats sale beats new.
-  const badge = !product.in_stock
+  const badge = !inStock
     ? { label: "Sold out", tone: "bg-charcoal" }
     : onSale
-      ? { label: `Save ${formatPrice(product.currency, savings)}`, tone: "bg-oxblood" }
+      ? { label: `Save ${formatPrice(currencyCode, savings)}`, tone: "bg-oxblood" }
       : product.is_new
         ? { label: "New", tone: "bg-brass" }
         : null;
@@ -83,12 +85,12 @@ export function ProductCard({ product }: { product: Product }) {
             {onSale ? (
               <>
                 <span className="mr-2 text-stone line-through">
-                  {formatPrice(product.currency, comparePrice!)}
+                  {formatPrice(currencyCode, comparePrice!)}
                 </span>
-                <span className="text-oxblood">{formatPrice(product.currency, price)}</span>
+                <span className="text-oxblood">{formatPrice(currencyCode, price)}</span>
               </>
             ) : (
-              <span className="text-stone">{formatPrice(product.currency, price)}</span>
+              <span className="text-stone">{formatPrice(currencyCode, price)}</span>
             )}
           </p>
         </div>
@@ -96,7 +98,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Button
             size="sm"
             variant="outline"
-            disabled={!product.in_stock || addToCart.isPending}
+            disabled={!inStock || addToCart.isPending}
             onClick={handleAddToCart}
           >
             {addToCart.isPending ? "Adding…" : "Add"}
