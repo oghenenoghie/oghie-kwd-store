@@ -58,10 +58,10 @@ export function SearchDialog() {
 
           <div className="mt-4 max-h-96 space-y-1 overflow-y-auto">
             {isFetching && <p className="py-6 text-center text-caption text-stone">Searching…</p>}
-            {!isFetching && debouncedQuery.length > 1 && data?.results.length === 0 && (
+            {!isFetching && debouncedQuery.length > 1 && data?.length === 0 && (
               <p className="py-6 text-center text-caption text-stone">No results for “{debouncedQuery}”.</p>
             )}
-            {data?.results.map((product) => (
+            {data?.map((product) => (
               <Link
                 key={product.id}
                 href={`/products/${product.slug}`}
@@ -70,7 +70,7 @@ export function SearchDialog() {
               >
                 <span>{product.name}</span>
                 <span className="text-stone">
-                  {product.currency} {product.price}
+                  {product.currency_detail.code} {product.price}
                 </span>
               </Link>
             ))}

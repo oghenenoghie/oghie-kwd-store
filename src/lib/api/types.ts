@@ -1,9 +1,34 @@
 /**
- * Field-level shapes for the DRF API aren't confirmed (see
- * ecommerce-storefront-design skill notes) — these are best-effort types
- * based on the route map. Revisit against the browsable API / admin once
- * endpoints are exercised for real.
+ * Field-level shapes confirmed against a live GET /api/products/ response.
+ * Cart/checkout/currencies/wishlist shapes are still unconfirmed — see notes
+ * on those types below.
  */
+
+export interface ProductImage {
+  id: number;
+  image: string;
+  image_url: string;
+  alt_text: string;
+  is_primary: boolean;
+}
+
+export interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  is_active: boolean;
+}
+
+export interface ProductCurrency {
+  id: number;
+  code: string;
+  name: string;
+  symbol: string;
+  exchange_rate_to_base: string | number;
+  is_base: boolean;
+  is_active: boolean;
+}
 
 export interface Product {
   id: number;
@@ -14,18 +39,15 @@ export interface Product {
   /** Present when the product is on sale; unconfirmed field name. */
   compare_at_price?: string | number;
   is_new?: boolean;
-  currency: string;
-  category: string;
-  in_stock: boolean;
-  rating?: number;
-  images: string[];
-}
-
-export interface ProductListResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Product[];
+  category: number;
+  category_detail: ProductCategory;
+  currency: number;
+  currency_detail: ProductCurrency;
+  stock_quantity: number;
+  is_active: boolean;
+  average_rating: number | null;
+  review_count: number;
+  images: ProductImage[];
 }
 
 export interface ProductFilters {

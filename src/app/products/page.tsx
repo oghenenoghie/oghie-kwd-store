@@ -28,8 +28,7 @@ function toFilters(searchParams: SearchParams): ProductFiltersType {
 
 async function getFilteredProducts(filters: ProductFiltersType): Promise<Product[]> {
   try {
-    const { results } = await getProducts(filters);
-    return results;
+    return await getProducts(filters);
   } catch {
     return [];
   }

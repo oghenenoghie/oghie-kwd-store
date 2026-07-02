@@ -13,8 +13,8 @@ async function getHomepageProducts(): Promise<{ newArrivals: Product[]; accessor
       getProducts({ category: "accessories" }),
     ]);
     return {
-      newArrivals: newArrivals.results.slice(0, 12),
-      accessories: accessories.results.slice(0, 12),
+      newArrivals: newArrivals.slice(0, 12),
+      accessories: accessories.slice(0, 12),
     };
   } catch {
     return { newArrivals: [], accessories: [] };
