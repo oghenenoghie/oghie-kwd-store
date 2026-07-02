@@ -16,6 +16,16 @@ export function getProducts(filters?: ProductFilters) {
   return apiFetch<Product[]>(`/api/products/${serializeFilters(filters)}`);
 }
 
+/**
+ * No single-product detail route is documented in the route map, so the
+ * detail page is served by matching against the full list instead of
+ * guessing an unconfirmed `/api/products/{slug}/` URL.
+ */
+export async function getProductBySlug(slug: string) {
+  const products = await getProducts();
+  return products.find((product) => product.slug === slug) ?? null;
+}
+
 export function getCurrencies() {
   return apiFetch<string[]>("/api/products/currencies/");
 }
