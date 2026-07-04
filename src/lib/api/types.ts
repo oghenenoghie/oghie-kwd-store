@@ -1,7 +1,7 @@
 /**
- * Field-level shapes confirmed against a live GET /api/products/ response.
- * Cart/checkout/currencies/wishlist shapes are still unconfirmed — see notes
- * on those types below.
+ * Field-level shapes confirmed against a live GET /api/products/ response,
+ * and WishlistItem/Product against products/serializers.py in oghie-store.
+ * Cart/checkout shapes are still unconfirmed — see notes on those types below.
  */
 
 export interface ProductImage {
@@ -59,6 +59,13 @@ export interface ProductFilters {
   in_stock?: boolean;
   min_rating?: number;
   ordering?: string;
+}
+
+export interface WishlistItem {
+  id: number;
+  product: number;
+  product_detail: Product;
+  created_at: string;
 }
 
 export interface CartLineItem {
