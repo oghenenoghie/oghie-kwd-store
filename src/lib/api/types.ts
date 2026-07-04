@@ -80,11 +80,24 @@ export interface AuthTokens {
   refresh: string;
 }
 
+export interface UserProfile {
+  id: number;
+  role: "super_admin" | "staff" | "vendor" | "customer";
+  phone: string;
+  address: string;
+  company_name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AuthUser {
   id: number;
+  username: string;
   email: string;
-  first_name?: string;
-  last_name?: string;
+  is_staff: boolean;
+  is_superuser: boolean;
+  profile: UserProfile;
 }
 
 export interface RegisterInput {
