@@ -39,8 +39,10 @@ export default async function ProductsPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const filters = toFilters(await searchParams);
+  const resolvedSearchParams = await searchParams;
+  const filters = toFilters(resolvedSearchParams);
   const products = await getFilteredProducts(filters);
+  const view = resolvedSearchParams.view === "compact" ? "compact" : "comfortable";
 
   return (
     <div className="mx-auto w-full max-w-7xl px-6 py-12">
@@ -53,7 +55,7 @@ export default async function ProductsPage({
         </Suspense>
       </div>
       <div className="mt-10">
-        <ProductGrid products={products} />
+        <ProductGrid products={products} view={view} />
       </div>
     </div>
   );
