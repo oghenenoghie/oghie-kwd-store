@@ -13,9 +13,9 @@ export function getCurrentUser() {
 }
 
 /**
- * Field-level shape is unconfirmed — the route map only lists POST
- * /api/auth/register/. Assumed to mirror AuthUser's email/first_name/last_name
- * fields plus password, and to return the created user rather than tokens
+ * Confirmed against RegisterSerializer (users/serializers.py in oghie-store):
+ * fields are username/email/password (Django's default auth.User model, so
+ * username is required); the response is the created user, not tokens
  * (register() below always follows up with an explicit login()).
  */
 export function register(input: RegisterInput) {
