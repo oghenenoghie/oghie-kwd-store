@@ -1,10 +1,15 @@
 import { apiFetch } from "./client";
 import type { AuthTokens, AuthUser, RegisterInput } from "./types";
 
-export function login(email: string, password: string) {
+/**
+ * /api/auth/token/ is the stock simplejwt TokenObtainPairView with no custom
+ * serializer or auth backend, so it authenticates against Django's default
+ * User.USERNAME_FIELD (username) — not email.
+ */
+export function login(username: string, password: string) {
   return apiFetch<AuthTokens>("/api/auth/token/", {
     method: "POST",
-    body: { email, password },
+    body: { username, password },
   });
 }
 
