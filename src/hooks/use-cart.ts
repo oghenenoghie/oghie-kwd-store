@@ -16,41 +16,36 @@ export function useActiveCart() {
   });
 }
 
+// addCartItem/updateCartItem/removeCartItem return the affected CartItem
+// (or nothing), not the whole Cart, and the server attaches items to the
+// caller's active cart itself - so these just refetch the cart afterward
+// instead of trying to splice a CartItem into the Cart cache.
+
 export function useAddToCart() {
   const queryClient = useQueryClient();
-  const { data: cart } = useActiveCart();
 
   return useMutation({
-    mutationFn: ({ productId, quantity }: { productId: number; quantity: number }) => {
-      if (!cart?.id) throw new Error("No active cart to add items to");
-      return addCartItem(cart.id, productId, quantity);
-    },
-    onSuccess: (nextCart) => queryClient.setQueryData(CART_KEY, nextCart),
+    mutationFn: ({ productId, quantity }: { productId: number; quantity: number }) =>
+      addCartItem(productId, quantity),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
   });
 }
 
 export function useUpdateCartItem() {
   const queryClient = useQueryClient();
-  const { data: cart } = useActiveCart();
 
   return useMutation({
-    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) => {
-      if (!cart?.id) throw new Error("No active cart");
-      return updateCartItem(cart.id, itemId, quantity);
-    },
-    onSuccess: (nextCart) => queryClient.setQueryData(CART_KEY, nextCart),
+    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
+      updateCartItem(itemId, quantity),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
   });
 }
 
 export function useRemoveCartItem() {
   const queryClient = useQueryClient();
-  const { data: cart } = useActiveCart();
 
   return useMutation({
-    mutationFn: (itemId: number) => {
-      if (!cart?.id) throw new Error("No active cart");
-      return removeCartItem(cart.id, itemId);
-    },
+    mutationFn: (itemId: number) => removeCartItem(itemId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: CART_KEY }),
   });
 }
