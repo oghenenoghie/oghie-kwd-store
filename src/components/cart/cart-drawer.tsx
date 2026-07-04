@@ -53,7 +53,7 @@ export function CartDrawer() {
               <div className="border-b border-ink/10 px-6 py-4">
                 {remaining > 0 ? (
                   <p className="font-body text-caption text-stone">
-                    Add {cart.currency} {remaining.toFixed(2)} more for free shipping
+                    Add {remaining.toFixed(2)} more for free shipping
                   </p>
                 ) : (
                   <p className="font-body text-caption text-brass">You&rsquo;ve unlocked free shipping</p>
@@ -72,10 +72,8 @@ export function CartDrawer() {
                     <div className="h-24 w-20 flex-shrink-0 bg-charcoal/10" />
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        <p className="font-body text-sm text-ink">{item.product.name}</p>
-                        <p className="mt-1 font-body text-caption text-stone">
-                          {cart.currency} {item.unit_price}
-                        </p>
+                        <p className="font-body text-sm text-ink">{item.product_name}</p>
+                        <p className="mt-1 font-body text-caption text-stone">{item.unit_price}</p>
                       </div>
                       <div className="flex items-center justify-between">
                         <QuantityStepper
@@ -99,9 +97,7 @@ export function CartDrawer() {
               <div className="border-t border-ink/10 px-6 py-6">
                 <div className="flex items-center justify-between font-body text-sm text-ink">
                   <span>Subtotal</span>
-                  <span>
-                    {cart.currency} {subtotal.toFixed(2)}
-                  </span>
+                  <span>{subtotal.toFixed(2)}</span>
                 </div>
                 <Button
                   className="mt-4 w-full"

@@ -68,18 +68,30 @@ export interface WishlistItem {
   created_at: string;
 }
 
+/**
+ * Confirmed against CartItemSerializer (orders/serializers.py in
+ * oghie-store): `product` is the bare foreign-key id, not a nested Product -
+ * product_name/unit_price/line_total are provided alongside it instead.
+ */
 export interface CartLineItem {
   id: number;
-  product: Product;
+  product: number;
+  product_name: string;
   quantity: number;
   unit_price: string | number;
+  line_total: string | number;
 }
 
+/**
+ * Confirmed against CartSerializer: `currency` is a bare (nullable) foreign-
+ * key id - get_or_create() doesn't set one, so there's no currency code
+ * available from this endpoint to display.
+ */
 export interface Cart {
   id: number;
+  currency: number | null;
   items: CartLineItem[];
   subtotal: string | number;
-  currency: string;
 }
 
 export interface AuthTokens {

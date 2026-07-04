@@ -1,33 +1,37 @@
 import { apiFetch } from "./client";
-import type { Cart } from "./types";
+import type { Cart, CartLineItem } from "./types";
 
 export function getActiveCart() {
   return apiFetch<Cart>("/api/orders/cart/active/", { auth: true });
 }
 
 /**
- * Unconfirmed: the route map only documents GET on the active cart and POST
- * on checkout. This assumes a nested items resource — verify against the
- * DRF browsable API before relying on it.
+ * Confirmed against orders/urls.py (oghie-store): CartItemViewSet is
+ * registered as a top-level `cart/items` resource, not nested under
+ * `cart/{cartId}/items/` - that nested path 404s, which is why "Add to
+ * cart" never actually added anything. perform_create() attaches the item
+ * to the caller's active cart server-side (get_or_create), so no cart id
+ * is needed on the request, and the response is the created CartItem, not
+ * the whole Cart.
  */
-export function addCartItem(cartId: number, productId: number, quantity: number) {
-  return apiFetch<Cart>(`/api/orders/cart/${cartId}/items/`, {
+export function addCartItem(productId: number, quantity: number) {
+  return apiFetch<CartLineItem>("/api/orders/cart/items/", {
     method: "POST",
     auth: true,
     body: { product: productId, quantity },
   });
 }
 
-export function updateCartItem(cartId: number, itemId: number, quantity: number) {
-  return apiFetch<Cart>(`/api/orders/cart/${cartId}/items/${itemId}/`, {
+export function updateCartItem(itemId: number, quantity: number) {
+  return apiFetch<CartLineItem>(`/api/orders/cart/items/${itemId}/`, {
     method: "PATCH",
     auth: true,
     body: { quantity },
   });
 }
 
-export function removeCartItem(cartId: number, itemId: number) {
-  return apiFetch<void>(`/api/orders/cart/${cartId}/items/${itemId}/`, {
+export function removeCartItem(itemId: number) {
+  return apiFetch<void>(`/api/orders/cart/items/${itemId}/`, {
     method: "DELETE",
     auth: true,
   });
