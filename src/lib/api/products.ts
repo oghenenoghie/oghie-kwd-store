@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import type { Product, ProductFilters } from "./types";
+import type { Product, ProductFilters, WishlistItem } from "./types";
 
 function serializeFilters(filters: ProductFilters = {}) {
   const params = new URLSearchParams();
@@ -30,14 +30,27 @@ export function getCurrencies() {
   return apiFetch<string[]>("/api/products/currencies/");
 }
 
+/**
+ * Confirmed against WishlistItemViewSet (products/views.py in oghie-store):
+ * a ModelViewSet, so this returns WishlistItem objects (id, product,
+ * product_detail, created_at) — not Product objects directly.
+ */
 export function getWishlist() {
-  return apiFetch<Product[]>("/api/products/wishlist/", { auth: true });
+  return apiFetch<WishlistItem[]>("/api/products/wishlist/", { auth: true });
 }
 
 export function addToWishlist(productId: number) {
-  return apiFetch<void>("/api/products/wishlist/", {
+  return apiFetch<WishlistItem>("/api/products/wishlist/", {
     method: "POST",
     auth: true,
     body: { product: productId },
+  });
+}
+
+/** id here is the WishlistItem's own id, not the product id. */
+export function removeFromWishlist(id: number) {
+  return apiFetch<void>(`/api/products/wishlist/${id}/`, {
+    method: "DELETE",
+    auth: true,
   });
 }
