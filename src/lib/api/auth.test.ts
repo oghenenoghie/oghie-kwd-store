@@ -38,15 +38,21 @@ describe("login", () => {
     vi.restoreAllMocks();
   });
 
-  it("posts {email, password} to /api/auth/token/", async () => {
+  // Regression test: /api/auth/token/ is the stock simplejwt
+  // TokenObtainPairView with no custom serializer or auth backend, so it
+  // authenticates against Django's default User.USERNAME_FIELD (username).
+  // A previous version sent {email, password}, which made every login -
+  // including the automatic one right after a successful registration -
+  // fail with a 400.
+  it("posts {username, password} to /api/auth/token/", async () => {
     mockFetchOnce({ access: "a", refresh: "r" });
 
-    await login("jane@example.com", "hunter2!!");
+    await login("jane", "hunter2!!");
 
     const [url, init] = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(url).toContain("/api/auth/token/");
     expect(JSON.parse(init.body as string)).toEqual({
-      email: "jane@example.com",
+      username: "jane",
       password: "hunter2!!",
     });
   });

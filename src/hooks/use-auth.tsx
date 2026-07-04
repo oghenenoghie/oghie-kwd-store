@@ -8,7 +8,7 @@ import type { AuthTokens, RegisterInput } from "@/lib/api/types";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 }
@@ -21,8 +21,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => subscribeToTokens(setLocalTokens), []);
 
-  const login = async (email: string, password: string) => {
-    const nextTokens = await loginRequest(email, password);
+  const login = async (username: string, password: string) => {
+    const nextTokens = await loginRequest(username, password);
     setTokens(nextTokens);
     await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
   };
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // follows up with an explicit login() to establish the session.
   const register = async (input: RegisterInput) => {
     await registerRequest(input);
-    await login(input.email, input.password);
+    await login(input.username, input.password);
   };
 
   const logout = () => {

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export default function AccountPage() {
   const { isAuthenticated, login, logout } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,10 +18,10 @@ export default function AccountPage() {
     setError(null);
     setIsSubmitting(true);
     try {
-      await login(email, password);
+      await login(username, password);
       router.push("/");
     } catch {
-      setError("Couldn't sign in. Check your email and password and try again.");
+      setError("Couldn't sign in. Check your username and password and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -43,16 +43,15 @@ export default function AccountPage() {
       <h1 className="font-display text-display-m text-ink">Sign in</h1>
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>
-          <label htmlFor="email" className="font-body text-caption uppercase tracking-widest text-stone">
-            Email
+          <label htmlFor="username" className="font-body text-caption uppercase tracking-widest text-stone">
+            Username
           </label>
           <input
-            id="email"
-            type="email"
-            autoComplete="email"
+            id="username"
+            autoComplete="username"
             required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
             className="mt-1 w-full border border-ink/20 bg-bone px-3 py-2 font-body text-sm text-ink outline-none focus-visible:border-ink"
           />
         </div>
