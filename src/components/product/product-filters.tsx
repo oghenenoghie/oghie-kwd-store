@@ -48,21 +48,21 @@ export function ProductFilters() {
   const view = searchParams.get("view") === "compact" ? "compact" : "comfortable";
 
   return (
-    <div className="flex items-stretch border-y border-ink/10 font-body text-caption uppercase tracking-widest text-ink">
+    <div className="flex items-stretch overflow-x-auto border-y border-ink/10 font-body text-caption uppercase tracking-widest text-ink">
       <button
         type="button"
         onClick={() => setFilterOpen(true)}
-        className="flex items-center gap-1 border-r border-ink/10 px-4 py-3 hover:bg-ink/5"
+        className="flex flex-shrink-0 items-center gap-1 border-r border-ink/10 px-3 py-3 hover:bg-ink/5 sm:px-4"
       >
         Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
       </button>
 
-      <div className="relative flex items-center border-r border-ink/10 px-4 py-3 hover:bg-ink/5">
+      <div className="relative flex flex-shrink-0 items-center border-r border-ink/10 px-3 py-3 hover:bg-ink/5 sm:px-4">
         <select
           value={searchParams.get("ordering") ?? ""}
           onChange={(event) => updateParams({ ordering: event.target.value })}
           aria-label="Sort by"
-          className="appearance-none bg-transparent pr-5 focus:outline-none"
+          className="w-24 appearance-none truncate bg-transparent pr-5 focus:outline-none"
         >
           <option value="">Sort by</option>
           {ORDERING_OPTIONS.map((option) => (
@@ -71,12 +71,12 @@ export function ProductFilters() {
             </option>
           ))}
         </select>
-        <ChevronDown size={14} className="pointer-events-none absolute right-4" />
+        <ChevronDown size={14} className="pointer-events-none absolute right-3 sm:right-4" />
       </div>
 
-      <div className="flex-1" />
+      <div className="min-w-4 flex-1" />
 
-      <div className="flex items-center gap-1 px-4 py-3">
+      <div className="flex flex-shrink-0 items-center gap-1 px-3 py-3 sm:px-4">
         <button
           type="button"
           aria-label="Comfortable grid"

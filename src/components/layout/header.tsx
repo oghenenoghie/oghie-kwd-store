@@ -49,11 +49,11 @@ export function Header() {
 
       <div
         className={cn(
-          "mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-300",
+          "mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 transition-all duration-300",
           isShrunk ? "py-3" : "py-6",
         )}
       >
-        <div className="flex flex-1 items-center gap-8">
+        <div className="flex items-center gap-8">
           <MobileNav light={isTransparent} />
           <MegaMenu light={isTransparent} />
         </div>
@@ -68,7 +68,7 @@ export function Header() {
           OGHIE
         </Link>
 
-        <div className="flex flex-1 items-center justify-end gap-6">
+        <div className="flex items-center justify-end gap-4 sm:gap-6">
           <span className={isTransparent ? "text-bone" : "text-ink"}>
             <SearchDialog />
           </span>

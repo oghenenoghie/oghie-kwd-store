@@ -12,6 +12,15 @@ if (typeof Element !== "undefined") {
   Element.prototype.hasPointerCapture ??= () => false;
 }
 
+// jsdom has no ResizeObserver - Header uses one to track its own height.
+if (typeof globalThis.ResizeObserver === "undefined") {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 afterEach(() => {
   cleanup();
 });

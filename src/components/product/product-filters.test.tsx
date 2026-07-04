@@ -42,4 +42,15 @@ describe("ProductFilters", () => {
 
     expect(pushMock).toHaveBeenCalledWith(expect.stringContaining("ordering=price"));
   });
+
+  // Regression test: a native <select> renders its closed width to fit its
+  // widest <option> (here "Price: high to low"), which pushed the bar past
+  // a 320px viewport and off the right edge of the page. Capping the
+  // select's own width keeps the bar within the viewport regardless of how
+  // long an ordering label gets.
+  it("caps the sort select's width so long option labels can't blow out the bar", () => {
+    render(<ProductFilters />);
+
+    expect(screen.getByLabelText("Sort by").className).toContain("w-24");
+  });
 });
