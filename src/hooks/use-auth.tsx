@@ -3,12 +3,13 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getTokens, setTokens, subscribeToTokens } from "@/lib/api/token-store";
-import { login as loginRequest } from "@/lib/api/auth";
-import type { AuthTokens } from "@/lib/api/types";
+import { login as loginRequest, register as registerRequest } from "@/lib/api/auth";
+import type { AuthTokens, RegisterInput } from "@/lib/api/types";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 }
 
@@ -26,6 +27,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
   };
 
+  // register() doesn't assume the backend logs the user in, so it always
+  // follows up with an explicit login() to establish the session.
+  const register = async (input: RegisterInput) => {
+    await registerRequest(input);
+    await login(input.email, input.password);
+  };
+
   const logout = () => {
     setTokens(null);
     queryClient.removeQueries({ queryKey: ["auth"] });
@@ -33,7 +41,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: Boolean(tokens?.access), login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated: Boolean(tokens?.access), login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
