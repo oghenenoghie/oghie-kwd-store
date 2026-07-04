@@ -1,4 +1,4 @@
-import { apiFetch } from "./client";
+import { apiFetch, ApiError } from "./client";
 import type { Product, ProductFilters, WishlistItem } from "./types";
 
 function serializeFilters(filters: ProductFilters = {}) {
@@ -17,13 +17,17 @@ export function getProducts(filters?: ProductFilters) {
 }
 
 /**
- * No single-product detail route is documented in the route map, so the
- * detail page is served by matching against the full list instead of
- * guessing an unconfirmed `/api/products/{slug}/` URL.
+ * Confirmed against ProductViewSet (products/views.py in oghie-store): it
+ * sets lookup_field = 'slug', so the router exposes a real detail route at
+ * GET /api/products/{slug}/ instead of only the list endpoint.
  */
 export async function getProductBySlug(slug: string) {
-  const products = await getProducts();
-  return products.find((product) => product.slug === slug) ?? null;
+  try {
+    return await apiFetch<Product>(`/api/products/${slug}/`);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
+  }
 }
 
 export function getCurrencies() {

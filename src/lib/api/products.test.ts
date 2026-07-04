@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { addToWishlist, getWishlist, removeFromWishlist } from "./products";
+import { addToWishlist, getProductBySlug, getWishlist, removeFromWishlist } from "./products";
 
 function mockFetchOnce(response: { status: number; jsonBody?: unknown }) {
   global.fetch = vi.fn().mockResolvedValue({
@@ -50,5 +50,35 @@ describe("wishlist API", () => {
     const [url, init] = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(url).toContain("/api/products/wishlist/42/");
     expect(init.method).toBe("DELETE");
+  });
+});
+
+describe("getProductBySlug", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  // Regression test: ProductViewSet sets lookup_field = 'slug', so a real
+  // GET /api/products/{slug}/ route exists. getProductBySlug() used to
+  // fetch the entire product list on every detail-page view and search it
+  // client-side instead of hitting that route directly.
+  it("requests the single-product route by slug", async () => {
+    const product = { id: 1, slug: "wool-coat" };
+    mockFetchOnce({ status: 200, jsonBody: product });
+
+    const result = await getProductBySlug("wool-coat");
+
+    const [url] = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toContain("/api/products/wool-coat/");
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(product);
+  });
+
+  it("returns null when the product isn't found", async () => {
+    mockFetchOnce({ status: 404, jsonBody: { detail: "Not found." } });
+
+    const result = await getProductBySlug("missing-product");
+
+    expect(result).toBeNull();
   });
 });
