@@ -27,8 +27,7 @@ function parseErrorMessage(error: unknown): string {
 export function RegisterForm() {
   const router = useRouter();
   const { register } = useAuth();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,12 +45,7 @@ export function RegisterForm() {
 
     setIsSubmitting(true);
     try {
-      await register({
-        email,
-        password,
-        first_name: firstName || undefined,
-        last_name: lastName || undefined,
-      });
+      await register({ username, email, password });
       router.push("/");
     } catch (err) {
       setError(parseErrorMessage(err));
@@ -62,33 +56,19 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="firstName" className="mb-2 block font-body text-xs tracking-wide text-stone">
-            First name
-          </label>
-          <input
-            id="firstName"
-            name="firstName"
-            autoComplete="given-name"
-            value={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
-            className={inputClasses}
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="mb-2 block font-body text-xs tracking-wide text-stone">
-            Last name
-          </label>
-          <input
-            id="lastName"
-            name="lastName"
-            autoComplete="family-name"
-            value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
-            className={inputClasses}
-          />
-        </div>
+      <div>
+        <label htmlFor="username" className="mb-2 block font-body text-xs tracking-wide text-stone">
+          Username
+        </label>
+        <input
+          id="username"
+          name="username"
+          required
+          autoComplete="username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          className={inputClasses}
+        />
       </div>
 
       <div>

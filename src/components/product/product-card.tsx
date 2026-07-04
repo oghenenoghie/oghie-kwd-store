@@ -106,7 +106,9 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
       {!isAuthenticated && (
-        <p className="mt-1 font-body text-[10px] text-stone">Sign in to add to bag</p>
+        <Link href="/account" className="mt-1 block font-body text-[10px] text-stone hover:text-ink">
+          Sign in to add to bag
+        </Link>
       )}
     </div>
   );
