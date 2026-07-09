@@ -1,14 +1,21 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "./header";
+
+let isAuthenticated = false;
+let currentUser: { username: string; email: string } | undefined;
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/products",
 }));
 
 vi.mock("@/hooks/use-auth", () => ({
-  useAuth: () => ({ isAuthenticated: false }),
+  useAuth: () => ({ isAuthenticated }),
+}));
+
+vi.mock("@/hooks/use-current-user", () => ({
+  useCurrentUser: () => ({ data: currentUser }),
 }));
 
 vi.mock("@/hooks/use-cart", () => ({
@@ -29,6 +36,11 @@ function renderHeader() {
 }
 
 describe("Header", () => {
+  afterEach(() => {
+    isAuthenticated = false;
+    currentUser = undefined;
+  });
+
   // Regression test: the logo used to sit between two `flex-1` side groups,
   // which only truly centers it when both sides have equal content width.
   // On mobile the left side (just a hamburger icon) is much narrower than
@@ -41,5 +53,16 @@ describe("Header", () => {
 
     const logo = screen.getByRole("link", { name: "OGHIE" });
     expect(logo.parentElement?.className).toContain("grid-cols-[1fr_auto_1fr]");
+  });
+
+  it("shows a signed-in indicator instead of the generic account icon once authenticated", () => {
+    isAuthenticated = true;
+    currentUser = { username: "customer_chidi", email: "chidi@oghiestore.test" };
+    renderHeader();
+
+    expect(
+      screen.getByRole("link", { name: "Account, signed in as customer_chidi" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Account" })).not.toBeInTheDocument();
   });
 });

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { Heart, ShoppingBag, User } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
+import { AccountIndicator } from "./account-indicator";
 import { AnnouncementBar } from "./announcement-bar";
 import { MegaMenu } from "./mega-menu";
 import { MobileNav } from "./mobile-nav";
@@ -95,13 +96,7 @@ export function Header() {
               </span>
             )}
           </button>
-          <Link
-            href="/account"
-            aria-label="Account"
-            className={cn("hidden transition-colors hover:text-brass sm:block", isTransparent ? "text-bone" : "text-ink")}
-          >
-            <User size={20} />
-          </Link>
+          <AccountIndicator light={isTransparent} />
         </div>
       </div>
     </header>
