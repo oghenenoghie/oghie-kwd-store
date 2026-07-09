@@ -1,8 +1,9 @@
 import { Hero } from "@/components/home/hero";
 import { ShopTheLook } from "@/components/home/shop-the-look";
 import { ProductCarousel } from "@/components/product/product-carousel";
+import { getHeroSlides } from "@/lib/api/cms";
 import { getProducts } from "@/lib/api/products";
-import type { Product } from "@/lib/api/types";
+import type { CmsSection, Product } from "@/lib/api/types";
 
 export const revalidate = 60;
 
@@ -21,12 +22,23 @@ async function getHomepageProducts(): Promise<{ newArrivals: Product[]; accessor
   }
 }
 
+async function getHomepageHeroSlides(): Promise<CmsSection[]> {
+  try {
+    return await getHeroSlides();
+  } catch {
+    return [];
+  }
+}
+
 export default async function Home() {
-  const { newArrivals, accessories } = await getHomepageProducts();
+  const [{ newArrivals, accessories }, heroSlides] = await Promise.all([
+    getHomepageProducts(),
+    getHomepageHeroSlides(),
+  ]);
 
   return (
     <div className="flex flex-1 flex-col">
-      <Hero />
+      <Hero slides={heroSlides} />
       <ProductCarousel
         overline="New season"
         title="New arrivals"

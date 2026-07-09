@@ -124,3 +124,21 @@ export interface RegisterInput {
   email: string;
   password: string;
 }
+
+/**
+ * Confirmed against CMSSectionSerializer (cms/serializers.py in
+ * oghie-store): `image` is the raw ImageField value (a storage path or,
+ * often for seeded content, a bare external URL), while `image_url` is the
+ * serializer's resolved, always-absolute URL - always prefer image_url.
+ */
+export interface CmsSection {
+  id: number;
+  title: string;
+  slug: string;
+  section_type: "hero" | "banner" | "featured_products" | "content" | "footer";
+  body: string;
+  image_url: string | null;
+  link_url: string;
+  sort_order: number;
+  is_active: boolean;
+}
